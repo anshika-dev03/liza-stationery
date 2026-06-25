@@ -1,0 +1,1 @@
+web: gunicorn liza.wsgi --log-file -
