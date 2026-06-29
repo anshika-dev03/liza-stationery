@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: liza-stationery
+    runtime: python
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "gunicorn liza.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "liza-stationery.onrender.com"
+      - key: DATABASE_URL
+        value: "postgresql://postgres:J1DoaHpvQfnxeksV@db.ggnnrwsspahtayufbraj.supabase.co:5432/postgres"
+      - key: FRONTEND_URL
+        value: "https://liza-stationery.vercel.app"
+      - key: CLOUDINARY_URL
+        value: "cloudinary://417858331831761:g0opZFeBByB_Q8tqiFKR1eNx-lg@ddsfrpmtl"
+      - key: PYTHON_VERSION
+        value: "3.11.0"

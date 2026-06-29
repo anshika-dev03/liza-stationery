@@ -122,3 +122,7 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Render specific
+import os
+if 'RENDER' in os.environ:
+    SECURE_SSL_REDIRECT = True
