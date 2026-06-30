@@ -16,12 +16,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'cloudinary',
-    'cloudinary_storage',
     'core',
 ]
 
@@ -78,9 +78,29 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── Media / Cloudinary ───────────────────────────────────────
-CLOUDINARY_URL = config('CLOUDINARY_URL', default='')
-if CLOUDINARY_URL:
+import cloudinary
+
+CLOUDINARY_URL_VALUE = config('CLOUDINARY_URL', default='')
+
+if CLOUDINARY_URL_VALUE:
+    # Parse cloudinary://api_key:api_secret@cloud_name
+    import re
+    match = re.match(r'cloudinary://(.+):(.+)@(.+)', CLOUDINARY_URL_VALUE)
+    if match:
+        api_key, api_secret, cloud_name = match.groups()
+        CLOUDINARY_STORAGE = {
+            'CLOUD_NAME': cloud_name,
+            'API_KEY': api_key,
+            'API_SECRET': api_secret,
+        }
+        cloudinary.config(
+            cloud_name=cloud_name,
+            api_key=api_key,
+            api_secret=api_secret,
+            secure=True
+        )
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    MEDIA_URL = f'https://res.cloudinary.com/{cloud_name}/'
 else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

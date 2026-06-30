@@ -10,10 +10,16 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_image_url(self, obj):
+    if obj.image:
+        url = obj.image.url
+        # Cloudinary URLs are already absolute; don't prefix them
+        if url.startswith('http'):
+            return url
         request = self.context.get('request')
-        if obj.image and request:
-            return request.build_absolute_uri(obj.image.url)
-        return None
+        if request:
+            return request.build_absolute_uri(url)
+        return url
+    return None
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
