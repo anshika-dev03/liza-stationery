@@ -51,13 +51,3 @@ def me(request):
         'is_staff': request.user.is_staff,
     })
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def debug_storage(request):
-    import os
-    from django.conf import settings
-    return Response({
-        'DEFAULT_FILE_STORAGE': settings.DEFAULT_FILE_STORAGE,
-        'CLOUDINARY_URL_set': bool(os.environ.get('CLOUDINARY_URL')),
-        'CLOUDINARY_STORAGE': getattr(settings, 'CLOUDINARY_STORAGE', 'NOT SET'),
-    })

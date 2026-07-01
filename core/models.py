@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 class Product(models.Model):
     name      = models.CharField(max_length=200)
@@ -8,7 +8,12 @@ class Product(models.Model):
     category  = models.CharField(max_length=100)
     stock     = models.IntegerField(default=1)
     emoji     = models.CharField(max_length=10, default='📦')
-    image     = models.ImageField(upload_to='products/', blank=True, null=True)
+    image = models.ImageField(
+        upload_to='products/',
+        blank=True,
+        null=True,
+        storage=MediaCloudinaryStorage()
+    )
     badge     = models.CharField(max_length=50, blank=True, null=True)
     featured  = models.BooleanField(default=False)
     rating    = models.FloatField(default=4.0)
