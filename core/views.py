@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, parsers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Product, Invoice
 from .serializers import ProductSerializer, InvoiceSerializer
 
@@ -49,4 +49,15 @@ def me(request):
         'id': request.user.id,
         'username': request.user.username,
         'is_staff': request.user.is_staff,
+    })
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def debug_storage(request):
+    import os
+    from django.conf import settings
+    return Response({
+        'DEFAULT_FILE_STORAGE': settings.DEFAULT_FILE_STORAGE,
+        'CLOUDINARY_URL_set': bool(os.environ.get('CLOUDINARY_URL')),
+        'CLOUDINARY_STORAGE': getattr(settings, 'CLOUDINARY_STORAGE', 'NOT SET'),
     })

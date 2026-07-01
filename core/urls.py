@@ -9,4 +9,5 @@ router.register(r'invoices', views.InvoiceViewSet, basename='invoice')
 urlpatterns = [
     path('', include(router.urls)),
     path('me/', views.me),
+    path('debug/', views.debug_storage),
 ]
